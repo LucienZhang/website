@@ -1,0 +1,19 @@
+{
+  "name": "website",
+  "version": "0.2.0",
+  "description": "Project of my website",
+  "main": "index.js",
+  "scripts": {
+    "test": "vuepress build docs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LucienZhang/website.git"
+  },
+  "author": "Lucien Zhang",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LucienZhang/website/issues"
+  },
+  "homepage": "https://github.com/LucienZhang/website#readme"
+}
