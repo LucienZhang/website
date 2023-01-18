@@ -26,6 +26,9 @@ const isProd = process.env.NODE_ENV === "production";
 export default defineUserConfig({
   // set site base to default value
   base: "/",
+  alias: {
+    "@assets": path.resolve(__dirname, "../assets"),
+  },
 
   // extra tags in `<head>`
   //   head,
@@ -46,7 +49,7 @@ export default defineUserConfig({
 
   // configure default theme
   theme: defaultTheme({
-    logo: "/images/hero.png",
+    logo: "/logo.png",
     repo: "LucienZhang/website",
     docsDir: "docs",
 
