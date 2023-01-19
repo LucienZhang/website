@@ -181,7 +181,7 @@ export default defineUserConfig({
     //   componentsDir: path.resolve(__dirname, "./components"),
     // }),
     // only enable shiki plugin in production mode
-    isProd ? shikiPlugin({ theme: "github-light" }) : [],
+    isProd ? shikiPlugin({ theme: "light-plus" }) : [],
     tabsPlugin({ events: ["snippetors-vuepress-plugin-code-copy-update-event"] }),
     codeCopyPlugin({
       color: "#757575",
