@@ -4,6 +4,7 @@ export const sidebarEn: SidebarConfig = {
   "/programming/": [
     {
       text: "Programming Languages",
+      collapsible: true,
       children: [
         { text: "Overview", link: "/programming/prog-lang/overview" },
         "/programming/prog-lang/basics",
@@ -19,6 +20,7 @@ export const sidebarEn: SidebarConfig = {
     },
     {
       text: "Data Structures and Algorithms",
+      collapsible: true,
       children: [
         { text: "Overview", link: "/programming/algorithms/overview" },
         "/programming/algorithms/math-formula",

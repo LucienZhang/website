@@ -1,9 +1,11 @@
 {
   "name": "website",
-  "version": "0.2.0",
   "private": true,
   "description": "Project of my website",
   "main": "index.js",
+  "engines": {
+    "node": ">=16"
+  },
   "scripts": {
     "dev": "vuepress dev docs",
     "build": "vuepress build docs"
@@ -19,13 +21,13 @@
   },
   "homepage": "https://github.com/LucienZhang/website#readme",
   "devDependencies": {
+    "@snippetors/vuepress-plugin-code-copy": "^1.2.3",
+    "@snippetors/vuepress-plugin-tabs": "^1.2.3",
     "@vuepress/plugin-shiki": "^2.0.0-beta.60",
+    "axios": "^1.2.3",
     "markdown-it-footnote": "^3.0.3",
     "markdown-it-multimd-table": "^4.2.0",
     "markdown-it-pangu": "^1.0.2",
     "vuepress-vite": "^2.0.0-beta.60"
-  },
-  "dependencies": {
-    "axios": "^1.2.3"
   }
 }
