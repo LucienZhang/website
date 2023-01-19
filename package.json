@@ -25,9 +25,11 @@
     "@snippetors/vuepress-plugin-tabs": "^1.2.3",
     "@vuepress/plugin-shiki": "^2.0.0-beta.60",
     "axios": "^1.2.3",
+    "breakpoints-js": "^1.0.6",
     "markdown-it-footnote": "^3.0.3",
     "markdown-it-multimd-table": "^4.2.0",
     "markdown-it-pangu": "^1.0.2",
+    "typed.js": "^2.0.12",
     "vuepress-vite": "^2.0.0-beta.60"
   }
 }
