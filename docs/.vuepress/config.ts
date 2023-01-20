@@ -8,8 +8,8 @@ import { defineUserConfig } from "@vuepress/cli";
 import { shikiPlugin } from "@vuepress/plugin-shiki";
 import { defaultTheme } from "@vuepress/theme-default";
 import { getDirname, path } from "@vuepress/utils";
-import tabsPlugin from '@snippetors/vuepress-plugin-tabs'
-import codeCopyPlugin from '@snippetors/vuepress-plugin-code-copy'
+import tabsPlugin from "@snippetors/vuepress-plugin-tabs";
+import codeCopyPlugin from "@snippetors/vuepress-plugin-code-copy";
 import {
   // head,
   navbarEn,
@@ -30,6 +30,7 @@ export default defineUserConfig({
   base: "/",
   alias: {
     "@assets": path.resolve(__dirname, "../assets"),
+    "@theme/Home.vue": path.resolve(__dirname, "./theme/components/Home.vue"),
   },
 
   // extra tags in `<head>`
@@ -182,11 +183,13 @@ export default defineUserConfig({
     // }),
     // only enable shiki plugin in production mode
     isProd ? shikiPlugin({ theme: "light-plus" }) : [],
-    tabsPlugin({ events: ["snippetors-vuepress-plugin-code-copy-update-event"] }),
+    tabsPlugin({
+      events: ["snippetors-vuepress-plugin-code-copy-update-event"],
+    }),
     codeCopyPlugin({
       color: "#757575",
       staticIcon: true,
       backgroundTransition: false,
-    })
+    }),
   ],
 });

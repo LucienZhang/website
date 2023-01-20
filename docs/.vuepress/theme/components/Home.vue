@@ -333,15 +333,19 @@ export default {
 </style>
 
 <style lang="scss" scoped>
+$navbarHeight: 3.6em;
+$homepageWidth: 100%;
+
 .home {
-  padding: var(--navbar-height) 0 0;
-  max-width: var(--homepage-width);
+  box-sizing: border-box;
+  padding: $navbarHeight 0 0;
+  max-width: $homepageWidth;
   margin: 0px auto;
   display: block;
 
   @media screen and (min-width: 737px) {
     #header {
-      padding-top: 6em+var(--navbar-height)
+      padding-top: 6em + $navbarHeight
     }
   }
 
