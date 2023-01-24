@@ -4,7 +4,7 @@ import { viteBundler } from "@vuepress/bundler-vite";
 import { defineUserConfig } from "@vuepress/cli";
 // import { docsearchPlugin } from '@vuepress/plugin-docsearch'
 // import { googleAnalyticsPlugin } from '@vuepress/plugin-google-analytics'
-// import { registerComponentsPlugin } from '@vuepress/plugin-register-components'
+import { registerComponentsPlugin } from '@vuepress/plugin-register-components'
 import { shikiPlugin } from "@vuepress/plugin-shiki";
 import { lucienTheme } from "./theme";
 import { getDirname, path } from "@vuepress/utils";
@@ -189,9 +189,9 @@ export default defineUserConfig({
     //   // we have multiple deployments, which would use different id
     //   id: process.env.DOCS_GA_ID ?? "",
     // }),
-    // registerComponentsPlugin({
-    //   componentsDir: path.resolve(__dirname, "./components"),
-    // }),
+    registerComponentsPlugin({
+      componentsDir: path.resolve(__dirname, "./components"),
+    }),
     // only enable shiki plugin in production mode
     isProd ? shikiPlugin({ theme: "light-plus" }) : [],
     tabsPlugin({
