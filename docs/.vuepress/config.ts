@@ -1,5 +1,5 @@
 import process from "node:process";
-// import { viteBundler } from '@vuepress/bundler-vite'
+import { viteBundler } from "@vuepress/bundler-vite";
 // import { webpackBundler } from '@vuepress/bundler-webpack'
 import { defineUserConfig } from "@vuepress/cli";
 // import { docsearchPlugin } from '@vuepress/plugin-docsearch'
@@ -10,6 +10,8 @@ import { lucienTheme } from "./theme";
 import { getDirname, path } from "@vuepress/utils";
 import tabsPlugin from "@snippetors/vuepress-plugin-tabs";
 import codeCopyPlugin from "@snippetors/vuepress-plugin-code-copy";
+import Components from "unplugin-vue-components/vite";
+import { AntDesignVueResolver } from "unplugin-vue-components/resolvers";
 import {
   // head,
   navbarEn,
@@ -34,6 +36,16 @@ export default defineUserConfig({
 
   // extra tags in `<head>`
   //   head,
+
+  bundler: viteBundler({
+    viteOptions: {
+      plugins: [
+        Components({
+          resolvers: [AntDesignVueResolver()],
+        }),
+      ],
+    },
+  }),
 
   // site-level locales config
   locales: {
