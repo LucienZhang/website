@@ -204,7 +204,7 @@
     </body>
     <a-modal :visible="qrcode" :centered="true" :closable="false" :footer="null" @cancel="qrcode = false">
       <div class="square">
-        <img :src="getImageUrl('./assets/images/wechat.jpg')" alt="QR Code" width="100%" height="100%" />
+        <img :src="getImageUrl('./assets/images/wechat.jpg')" alt="QR Code" style="width: 100%; height: 100%;" />
       </div>
     </a-modal>
   </main>
@@ -349,15 +349,5 @@ $homepageWidth: 100%;
     }
   }
 
-  .square {
-    width: 100%;
-    max-width: 500px;
-  }
-
-  .square::after {
-    content: "";
-    display: block;
-    margin-top: 100%;
-  }
 }
 </style>
