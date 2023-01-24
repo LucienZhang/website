@@ -6,7 +6,7 @@ import { defineUserConfig } from "@vuepress/cli";
 // import { googleAnalyticsPlugin } from '@vuepress/plugin-google-analytics'
 // import { registerComponentsPlugin } from '@vuepress/plugin-register-components'
 import { shikiPlugin } from "@vuepress/plugin-shiki";
-import { defaultTheme } from "@vuepress/theme-default";
+import { lucienTheme } from "./theme";
 import { getDirname, path } from "@vuepress/utils";
 import tabsPlugin from "@snippetors/vuepress-plugin-tabs";
 import codeCopyPlugin from "@snippetors/vuepress-plugin-code-copy";
@@ -30,7 +30,6 @@ export default defineUserConfig({
   base: "/",
   alias: {
     "@assets": path.resolve(__dirname, "../assets"),
-    "@theme/Home.vue": path.resolve(__dirname, "./theme/components/Home.vue"),
   },
 
   // extra tags in `<head>`
@@ -51,7 +50,7 @@ export default defineUserConfig({
   },
 
   // configure default theme
-  theme: defaultTheme({
+  theme: lucienTheme({
     logo: "/logo.png",
     repo: "LucienZhang/website",
     docsDir: "docs",
