@@ -14,7 +14,6 @@ export const lucienTheme = (options: DefaultThemeOptions): Theme => {
 
     alias: {
       "@theme/Home.vue": path.resolve(__dirname, "./components/Home.vue"),
-      "@theme/Navbar.vue": path.resolve(__dirname, "./components/Navbar.vue"),
     },
   };
 };
