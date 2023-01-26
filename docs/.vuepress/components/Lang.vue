@@ -1,12 +1,13 @@
 <template>
   <div class="tiobe">
-    <a-spin size="large" tip="Loading..." :spinning="chartOptions.series.length <= 0" style="min-height:80px">
+    <p>The chart below shows the changes in the popularity of the top 10 programming languages in the last 20 years.</p>
+    <a-spin size="large" tip="Loading..." :spinning="chartOptions.series.length <= 0">
       <div>
         <highcharts v-if="chartOptions.series.length > 0" :options="chartOptions"></highcharts>
       </div>
     </a-spin>
-    <Content slot-key="between" />
-    <a-spin size="large" tip="Loading..." :spinning="!top20.tbody" style="min-height:80px">
+    <p>The table below shows the current top 20 most popular programming languages.</p>
+    <a-spin size="large" tip="Loading..." :spinning="!top20.tbody">
       <div class="table-wrapper">
         <table v-if="top20.tbody" class="table-top20">
           <thead v-html="top20.thead"></thead>
@@ -30,7 +31,7 @@
 
 <script>
 import { Chart } from "highcharts-vue";
-import axios from "axios";
+import { axiosCorsProxy } from '../axios-instances'
 import * as cheerio from 'cheerio';
 
 export default {
@@ -114,10 +115,8 @@ export default {
     },
   },
   beforeMount() {
-    // CORS proxy server:
-    // https://thingproxy.freeboard.io/fetch/https://www.tiobe.com/tiobe-index/
-    axios
-      .get("https://cors-anywhere.herokuapp.com/https://www.tiobe.com/tiobe-index/") // To get rid of CORS error
+    axiosCorsProxy
+      .get("", { params: { url: "https://www.tiobe.com/tiobe-index/" } }) // To get rid of CORS error
       .then(res => {
         let $ = cheerio.load(res.data);
         // highcharts
@@ -168,12 +167,16 @@ export default {
       .catch(res => {
         console.log(res);
       });
-  }
+  },
 };
 </script>
 
 <style lang="scss" scoped>
 .tiobe {
+  .ant-spin-nested-loading {
+    min-height: 80px;
+  }
+
   .table-wrapper {
     overflow: scroll;
 

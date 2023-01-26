@@ -4,7 +4,7 @@ import { viteBundler } from "@vuepress/bundler-vite";
 import { defineUserConfig } from "@vuepress/cli";
 // import { docsearchPlugin } from '@vuepress/plugin-docsearch'
 // import { googleAnalyticsPlugin } from '@vuepress/plugin-google-analytics'
-import { registerComponentsPlugin } from '@vuepress/plugin-register-components'
+import { registerComponentsPlugin } from "@vuepress/plugin-register-components";
 import { shikiPlugin } from "@vuepress/plugin-shiki";
 import { lucienTheme } from "./theme";
 import { getDirname, path } from "@vuepress/utils";
@@ -23,11 +23,16 @@ import {
 import markdownItFootnotePlugin from "markdown-it-footnote";
 import markdownItPanguPlugin from "markdown-it-pangu";
 import markdownItMultimdTablePlugin from "markdown-it-multimd-table";
+import { isProd } from "./common";
 
 const __dirname = getDirname(import.meta.url);
-const isProd = process.env.NODE_ENV === "production";
 
 export default defineUserConfig({
+  define: isProd
+    ? {
+        __APP_DEBUG__: false,
+      }
+    : { __APP_DEBUG__: true },
   // set site base to default value
   base: "/",
   alias: {
