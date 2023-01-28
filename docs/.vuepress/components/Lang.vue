@@ -16,11 +16,14 @@
               <td>{{ row.now }}</td>
               <td>{{ row.pre }}</td>
               <td>
-                <img v-if="row.changeIcon" :src="row.changeIcon" alt="change" />
+                <img v-if="row.changeArrow.src" :src="toLocalAsset(row.changeArrow.src)" :alt="row.changeArrow.alt">
               </td>
-              <td>{{ row.name }}</td>
+              <td class="td-top20">
+                <img :src="toLocalAsset(row.langIcon.src)" :alt="row.langIcon.alt" :style="row.langIcon.style">
+              </td>
+              <td>{{ row.langName }}</td>
               <td>{{ row.rating }}</td>
-              <td>{{ row.change }}</td>
+              <td>{{ row.changePercentage }}</td>
             </tr>
           </tbody>
         </table>
@@ -41,6 +44,9 @@ export default {
   data() {
     return {
       chartOptions: {
+        accessibility: {
+          enabled: false
+        },
         credits: {
           enabled: false
         },
@@ -113,12 +119,15 @@ export default {
     getImageUrl(path) {
       return new URL(path, import.meta.url).href;
     },
+    toLocalAsset(path) {
+      return this.getImageUrl(`./assets/tiobe/${path.split('/').at(-1)}`)
+    }
   },
   beforeMount() {
     axiosCorsProxy
       .get("", { params: { url: "https://www.tiobe.com/tiobe-index/" } }) // To get rid of CORS error
       .then(res => {
-        let $ = cheerio.load(res.data);
+        let $ = cheerio.load(res.data.text);
         // highcharts
         let scripts = $("script").get();
         let testRe = /\$\('#container'\)\.highcharts/;
@@ -143,11 +152,13 @@ export default {
           let row = {
             now: tr.children[0].children[0].data,
             pre: tr.children[1].children[0].data,
-            name: tr.children[3].children[0].data,
-            rating: tr.children[4].children[0].data,
-            change: tr.children[5].children[0].data,
+            changeArrow: tr.children[2].children.length === 1 ? tr.children[2].children[0].attribs : {},
+            langIcon: tr.children[3].children[0].attribs,
+            langName: tr.children[4].children[0].data,
+            rating: tr.children[5].children[0].data,
+            changePercentage: tr.children[6].children[0].data,
             link: encodeURIComponent(
-              tr.children[3].children[0].data
+              tr.children[4].children[0].data
                 .replace("/", "-")
                 .replace(".", "dot")
                 .replace(/\s/g, "-")
@@ -156,10 +167,6 @@ export default {
                 .replace(/[+]/g, "plus")
             )
           };
-          if (tr.children[2].children.length === 1) {
-            row.changeIcon = this.getImageUrl("./assets/tiobe/" +
-              tr.children[2].children[0].attribs.src.split("/")[2]);
-          }
           tbody.push(row);
         }
         this.top20.tbody = tbody;
@@ -189,11 +196,36 @@ export default {
 
   table.table-top20 {
     text-align: center;
+    background-color: #f2f7fc;
 
-    tbody tr:hover td {
-      background-color: lightgrey;
-      font-weight: bold;
-      cursor: pointer;
+    tbody {
+      td {
+        border-color: rgb(166, 170, 175);
+      }
+
+      tr:nth-child(2n) {
+        background-color: #dbe0e5;
+      }
+
+      tr:hover td {
+        background-color: lightgrey;
+        font-weight: bold;
+        cursor: pointer;
+      }
+
+      td.td-top20 img {
+        max-width: fit-content;
+      }
+    }
+  }
+}
+</style>
+
+<style lang="scss">
+.tiobe {
+  table.table-top20 {
+    th {
+      border-color: rgb(166, 170, 175);
     }
   }
 }
