@@ -1,17 +1,16 @@
-import process from "node:process";
 import { viteBundler } from "@vuepress/bundler-vite";
 // import { webpackBundler } from '@vuepress/bundler-webpack'
 import { defineUserConfig } from "@vuepress/cli";
 // import { docsearchPlugin } from '@vuepress/plugin-docsearch'
 // import { googleAnalyticsPlugin } from '@vuepress/plugin-google-analytics'
+import codeCopyPlugin from "@snippetors/vuepress-plugin-code-copy";
+import tabsPlugin from "@snippetors/vuepress-plugin-tabs";
 import { registerComponentsPlugin } from "@vuepress/plugin-register-components";
 import { shikiPlugin } from "@vuepress/plugin-shiki";
-import { lucienTheme } from "./theme";
 import { getDirname, path } from "@vuepress/utils";
-import tabsPlugin from "@snippetors/vuepress-plugin-tabs";
-import codeCopyPlugin from "@snippetors/vuepress-plugin-code-copy";
-import Components from "unplugin-vue-components/vite";
 import { AntDesignVueResolver } from "unplugin-vue-components/resolvers";
+import Components from "unplugin-vue-components/vite";
+import { mdEnhancePlugin } from "vuepress-plugin-md-enhance";
 import {
   // head,
   navbarEn,
@@ -19,10 +18,11 @@ import {
   sidebarEn,
   sidebarZh,
 } from "./configs/index.js";
+import { lucienTheme } from "./theme";
 
 import markdownItFootnotePlugin from "markdown-it-footnote";
-import markdownItPanguPlugin from "markdown-it-pangu";
 import markdownItMultimdTablePlugin from "markdown-it-multimd-table";
+import markdownItPanguPlugin from "markdown-it-pangu";
 import { isProd } from "./common";
 
 const __dirname = getDirname(import.meta.url);
@@ -196,6 +196,9 @@ export default defineUserConfig({
     // }),
     registerComponentsPlugin({
       componentsDir: path.resolve(__dirname, "./components"),
+    }),
+    mdEnhancePlugin({
+      mathjax: true,
     }),
     // only enable shiki plugin in production mode
     isProd ? shikiPlugin({ theme: "light-plus" }) : [],
