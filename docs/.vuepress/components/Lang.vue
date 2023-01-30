@@ -120,7 +120,7 @@ export default {
       return new URL(path, import.meta.url).href;
     },
     toLocalAsset(path) {
-      return this.getImageUrl(`./assets/tiobe/${path.split('/').at(-1)}`)
+      return this.getImageUrl(`./assets/images/tiobe/${path.split('/').at(-1)}`)
     }
   },
   beforeMount() {
