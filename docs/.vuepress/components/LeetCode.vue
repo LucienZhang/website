@@ -19,7 +19,7 @@ import { useSiteLocaleData } from '@vuepress/client';
 import { axiosCorsProxy } from '../axios-instances';
 // import * as d3 from 'd3';
 // import * as nvd3 from 'nvd3';
-import * as d3 from './assets/js/d3.min.js'
+import * as d3 from './assets/js/d3.min.js';
 
 
 export default {
@@ -46,13 +46,9 @@ export default {
   },
   beforeMount() {
     // ranking details from global site
-    // await import('./test')
-    // await import('d3');
-    // await import('nvd3');
     axiosCorsProxy
       .get("", { params: { url: "https://leetcode.com/lucienzhang/" } })
       .then(res => {
-        console.log('TEST',res);
         return axiosCorsProxy.post("",
           {
             operationName: "getContentRankingData",
@@ -80,12 +76,13 @@ query getContentRankingData($username: String!) {
           },
           {
             params: {
-              url: "https://leetcode.com/graphql", headers: {
+              url: "https://leetcode.com/graphql",
+              headers: {
                 referer: "https://leetcode.com/lucienzhang/",
-                cookie: res.data.headers['set-cookie'].split(';')[0]
               },
+              cookies: res.data.cookies
             },
-          })
+          });
       })
 
       // axios
