@@ -125,7 +125,7 @@ export default {
   },
   beforeMount() {
     axiosCorsProxy
-      .get("", { params: { url: "https://www.tiobe.com/tiobe-index/" } }) // To get rid of CORS error
+      .post("", { url: "https://www.tiobe.com/tiobe-index/", method: "GET" }) // To get rid of CORS error
       .then(res => {
         let $ = cheerio.load(res.data.text);
         // highcharts

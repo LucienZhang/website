@@ -17,6 +17,8 @@ const axiosCorsProxy = axios.create({
   baseURL: baseApiUrl + "/v1/cors-proxy",
 });
 
+axiosCorsProxy.defaults.headers.post["Content-Type"] = "application/json";
+
 if (__APP_DEBUG__) {
   [axiosMl, axiosCorsProxy].forEach((instance) => {
     instance.interceptors.request.use((request) => {
