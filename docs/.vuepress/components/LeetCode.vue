@@ -3,7 +3,7 @@
     <a-spin size="large" tip="Loading..." :spinning="!ranking">
       <p v-if="rating" class="rating">{{ isEnglishSite? "Rating": "竞赛积分" }}: {{ rating }}</p>
       <p v-if="CNranking" class="ranking">
-        {{ isEnglishSite? "Rating": "竞赛积分" }}: {{ CNranking }}
+        {{ isEnglishSite? "China Ranking": "中国排名" }}: {{ CNranking }}
       </p>
       <p v-if="ranking" class="ranking">{{ isEnglishSite? "Global Ranking": "全球排名" }}: {{ ranking }}</p>
       <div id="chart">
@@ -15,12 +15,9 @@
 
 <script>
 import { useSiteLocaleData } from '@vuepress/client';
-// import { onBeforeMount } from 'vue';
 import { axiosCorsProxy } from '../axios-instances';
-// import * as d3 from 'd3';
-// import * as nvd3 from 'nvd3';
-import * as d3 from './assets/js/d3.min.js';
-
+await import("./assets/js/d3");
+await import("./assets/js/nv.d3");
 
 export default {
   props: {
@@ -55,9 +52,10 @@ export default {
             method: "POST",
             headers: {
               referer: "https://leetcode.com/lucienzhang/",
+              "content-type": "application/json"
             },
             cookies: res.data.cookies,
-            data: {
+            data: JSON.stringify({
               operationName: "getContentRankingData",
               variables: { username: "lucienzhang" },
               query: `
@@ -80,36 +78,12 @@ query getContentRankingData($username: String!) {
   }
 }
 `,
-            },
+            }),
           },
         );
       })
-
-      // axios
-      //   .post(
-      //     "https://cors-anywhere.herokuapp.com/https://leetcode.com/graphql",
-      //     {
-      //       operationName: "getContentRankingData",
-      //       variables: { username: "lucienzhang" },
-      //       query:
-      //         "query getContentRankingData($username: String!) {\n  userContestRanking(username: $username) {\n    attendedContestsCount\n    rating\n    globalRanking\n    __typename\n  }\n  userContestRankingHistory(username: $username) {\n    contest {\n      title\n      startTime\n      __typename\n    }\n    rating\n    ranking\n    __typename\n  }\n}\n",
-      //     },
-      //     {
-      //       headers: {
-      //         authority: "leetcode.com",
-      //         accept: "*/*",
-      //         "content-type": "application/json",
-      //         // origin: "https://leetcode.com",
-      //         // "sec-fetch-site": "same-origin",
-      //         // "sec-fetch-mode": "cors",
-      //         // "sec-fetch-dest": "empty",
-      //         // referer: "https://leetcode.com/lucienzhang/",
-      //         "accept-language": "en-US,en;q=0.9,zh-CN;q=0.8,zh;q=0.7",
-      //       },
-      //     }
-      //   )
       .then((res) => {
-        let data = res.data.text;
+        let data = JSON.parse(res.data.text).data;
         this.ranking = data.userContestRanking.globalRanking;
         this.rating = parseInt(data.userContestRanking.rating);
 
@@ -124,8 +98,8 @@ query getContentRankingData($username: String!) {
           });
         });
 
-        nvd3.addGraph(function () {
-          let chart = nvd3.models
+        nv.addGraph(function () {
+          let chart = nv.models
             .lineChart()
             .useInteractiveGuideline(false)
             .margin({ top: 20, right: 20, bottom: 40, left: 55 });
@@ -159,7 +133,7 @@ query getContentRankingData($username: String!) {
           d3.select("#chart svg").datum(ranking_data).call(chart);
 
           //Update the chart when window resizes.
-          nvd3.utils.windowResize(function () {
+          nv.utils.windowResize(function () {
             chart.update();
           });
           return chart;
@@ -170,50 +144,33 @@ query getContentRankingData($username: String!) {
       });
 
     // CN ranking from CN site
-//     axiosCorsProxy
-//       .post("",
-//         {
-//           operationName: "userContest",
-//           variables: { username: "lucien_z" },
-//           query: `
-// query userContest($userSlug: String!) {
-//   userContestRanking(userSlug: $userSlug) {
-//     currentRatingRanking
-//     __typename
-//   }
-// }
-// `,
-//         },
-//         { params: { url: "https://leetcode-cn.com/graphql" } })
-//       // axios
-//       //   .post(
-//       //     "https://cors-anywhere.herokuapp.com/https://leetcode-cn.com/graphql/",
-//       //     {
-//       //       operationName: "userContest",
-//       //       variables: { userSlug: "lucien_z" },
-//       //       query:
-//       //         "query userContest($userSlug: String!) {\n  userContestRanking(userSlug: $userSlug) {\n    currentRatingRanking\n    __typename\n  }\n}\n",
-//       //     },
-//       //     {
-//       //       headers: {
-//       //         authority: "leetcode-cn.com",
-//       //         accept: "*/*",
-//       //         "content-type": "application/json",
-//       //         // origin: "https://leetcode.com",
-//       //         // "sec-fetch-site": "same-origin",
-//       //         // "sec-fetch-mode": "cors",
-//       //         // "sec-fetch-dest": "empty",
-//       //         // referer: "https://leetcode.com/lucienzhang/",
-//       //         "accept-language": "en-US,en;q=0.9,zh-CN;q=0.8,zh;q=0.7",
-//       //       },
-//       //     }
-//       //   )
-//       .then((res) => {
-//         this.CNranking = res.data.data.userContestRanking.currentRatingRanking;
-//       })
-//       .catch((res) => {
-//         console.log(res);
-//       });
+    axiosCorsProxy
+      .post("",
+        {
+          url: "https://leetcode.cn/graphql",
+          method: "POST",
+          headers: {
+            "content-type": "application/json"
+          },
+          data: JSON.stringify({
+            operationName: "userContest",
+            variables: { userSlug: "lucien_z" },
+            query: `
+query userContest($userSlug: String!) {
+  userContestRanking(userSlug: $userSlug) {
+    currentRatingRanking
+    __typename
+  }
+}
+`,
+          })
+        })
+      .then((res) => {
+        this.CNranking = JSON.parse(res.data.text).data.userContestRanking.currentRatingRanking;
+      })
+      .catch((res) => {
+        console.log(res);
+      });
   },
 };
 </script>
