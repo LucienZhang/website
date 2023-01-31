@@ -1,24 +1,23 @@
 <template>
   <div class="leetcode">
     <a-spin size="large" tip="Loading..." :spinning="!ranking">
-      <p v-if="rating" class="rating">{{ ratingName }}: {{ rating }}</p>
+      <p v-if="rating" class="rating">{{ isEnglishSite? "Rating": "竞赛积分" }}: {{ rating }}</p>
       <p v-if="CNranking" class="ranking">
-        {{ CNrankingName }}: {{ CNranking }}
+        {{ isEnglishSite? "China Ranking": "中国排名" }}: {{ CNranking }}
       </p>
-      <p v-if="ranking" class="ranking">{{ rankingName }}: {{ ranking }}</p>
+      <p v-if="ranking" class="ranking">{{ isEnglishSite? "Global Ranking": "全球排名" }}: {{ ranking }}</p>
       <div id="chart">
-        <svg />
+        <svg></svg>
       </div>
     </a-spin>
   </div>
 </template>
 
 <script>
-import axios from "axios";
-// import cheerio from "cheerio";
-
-require("d3");
-require("nvd3");
+import { useSiteLocaleData } from '@vuepress/client';
+import { axiosCorsProxy } from '../axios-instances';
+await import("./assets/js/d3");
+await import("./assets/js/nv.d3");
 
 export default {
   props: {
@@ -28,14 +27,11 @@ export default {
     },
   },
   computed: {
-    rankingName() {
-      return this.lang === "CN" ? "全球排名" : "Global Ranking";
+    siteLocale() {
+      return useSiteLocaleData();
     },
-    CNrankingName() {
-      return this.lang === "CN" ? "中国排名" : "China Ranking";
-    },
-    ratingName() {
-      return this.lang === "CN" ? "竞赛积分" : "Rating";
+    isEnglishSite() {
+      return ["en", "en-us"].includes(this.siteLocale.value.lang.toLowerCase());
     },
   },
   data() {
@@ -45,33 +41,49 @@ export default {
       CNranking: null,
     };
   },
-  mounted() {
+  beforeMount() {
     // ranking details from global site
-    axios
-      .post(
-        "https://cors-anywhere.herokuapp.com/https://leetcode.com/graphql",
-        {
-          operationName: "getContentRankingData",
-          variables: { username: "lucienzhang" },
-          query:
-            "query getContentRankingData($username: String!) {\n  userContestRanking(username: $username) {\n    attendedContestsCount\n    rating\n    globalRanking\n    __typename\n  }\n  userContestRankingHistory(username: $username) {\n    contest {\n      title\n      startTime\n      __typename\n    }\n    rating\n    ranking\n    __typename\n  }\n}\n",
-        },
-        {
-          headers: {
-            authority: "leetcode.com",
-            accept: "*/*",
-            "content-type": "application/json",
-            // origin: "https://leetcode.com",
-            // "sec-fetch-site": "same-origin",
-            // "sec-fetch-mode": "cors",
-            // "sec-fetch-dest": "empty",
-            // referer: "https://leetcode.com/lucienzhang/",
-            "accept-language": "en-US,en;q=0.9,zh-CN;q=0.8,zh;q=0.7",
+    axiosCorsProxy
+      .post("", { url: "https://leetcode.com/lucienzhang/", method: "GET" })
+      .then(res => {
+        return axiosCorsProxy.post("",
+          {
+            url: "https://leetcode.com/graphql",
+            method: "POST",
+            headers: {
+              referer: "https://leetcode.com/lucienzhang/",
+              "content-type": "application/json"
+            },
+            cookies: res.data.cookies,
+            data: JSON.stringify({
+              operationName: "getContentRankingData",
+              variables: { username: "lucienzhang" },
+              query: `
+query getContentRankingData($username: String!) {
+  userContestRanking(username: $username) {
+    attendedContestsCount
+    rating
+    globalRanking
+    __typename
+  }
+  userContestRankingHistory(username: $username) {
+    contest {
+      title
+      startTime
+      __typename
+    }
+    rating
+    ranking
+    __typename
+  }
+}
+`,
+            }),
           },
-        }
-      )
+        );
+      })
       .then((res) => {
-        let data = res.data.data;
+        let data = JSON.parse(res.data.text).data;
         this.ranking = data.userContestRanking.globalRanking;
         this.rating = parseInt(data.userContestRanking.rating);
 
@@ -132,31 +144,29 @@ export default {
       });
 
     // CN ranking from CN site
-    axios
-      .post(
-        "https://cors-anywhere.herokuapp.com/https://leetcode-cn.com/graphql/",
+    axiosCorsProxy
+      .post("",
         {
-          operationName: "userContest",
-          variables: { userSlug: "lucien_z" },
-          query:
-            "query userContest($userSlug: String!) {\n  userContestRanking(userSlug: $userSlug) {\n    currentRatingRanking\n    __typename\n  }\n}\n",
-        },
-        {
+          url: "https://leetcode.cn/graphql",
+          method: "POST",
           headers: {
-            authority: "leetcode-cn.com",
-            accept: "*/*",
-            "content-type": "application/json",
-            // origin: "https://leetcode.com",
-            // "sec-fetch-site": "same-origin",
-            // "sec-fetch-mode": "cors",
-            // "sec-fetch-dest": "empty",
-            // referer: "https://leetcode.com/lucienzhang/",
-            "accept-language": "en-US,en;q=0.9,zh-CN;q=0.8,zh;q=0.7",
+            "content-type": "application/json"
           },
-        }
-      )
+          data: JSON.stringify({
+            operationName: "userContest",
+            variables: { userSlug: "lucien_z" },
+            query: `
+query userContest($userSlug: String!) {
+  userContestRanking(userSlug: $userSlug) {
+    currentRatingRanking
+    __typename
+  }
+}
+`,
+          })
+        })
       .then((res) => {
-        this.CNranking = res.data.data.userContestRanking.currentRatingRanking;
+        this.CNranking = JSON.parse(res.data.text).data.userContestRanking.currentRatingRanking;
       })
       .catch((res) => {
         console.log(res);
