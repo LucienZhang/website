@@ -47,13 +47,20 @@ export default {
   beforeMount() {
     // ranking details from global site
     axiosCorsProxy
-      .get("", { params: { url: "https://leetcode.com/lucienzhang/" } })
+      .post("", { url: "https://leetcode.com/lucienzhang/", method: "GET" })
       .then(res => {
         return axiosCorsProxy.post("",
           {
-            operationName: "getContentRankingData",
-            variables: { username: "lucienzhang" },
-            query: `
+            url: "https://leetcode.com/graphql",
+            method: "POST",
+            headers: {
+              referer: "https://leetcode.com/lucienzhang/",
+            },
+            cookies: res.data.cookies,
+            data: {
+              operationName: "getContentRankingData",
+              variables: { username: "lucienzhang" },
+              query: `
 query getContentRankingData($username: String!) {
   userContestRanking(username: $username) {
     attendedContestsCount
@@ -73,16 +80,9 @@ query getContentRankingData($username: String!) {
   }
 }
 `,
-          },
-          {
-            params: {
-              url: "https://leetcode.com/graphql",
-              headers: {
-                referer: "https://leetcode.com/lucienzhang/",
-              },
-              cookies: res.data.cookies
             },
-          });
+          },
+        );
       })
 
       // axios
@@ -109,7 +109,7 @@ query getContentRankingData($username: String!) {
       //     }
       //   )
       .then((res) => {
-        let data = res.data.data;
+        let data = res.data.text;
         this.ranking = data.userContestRanking.globalRanking;
         this.rating = parseInt(data.userContestRanking.rating);
 
@@ -170,50 +170,50 @@ query getContentRankingData($username: String!) {
       });
 
     // CN ranking from CN site
-    axiosCorsProxy
-      .post("",
-        {
-          operationName: "userContest",
-          variables: { username: "lucien_z" },
-          query: `
-query userContest($userSlug: String!) {
-  userContestRanking(userSlug: $userSlug) {
-    currentRatingRanking
-    __typename
-  }
-}
-`,
-        },
-        { params: { url: "https://leetcode-cn.com/graphql" } })
-      // axios
-      //   .post(
-      //     "https://cors-anywhere.herokuapp.com/https://leetcode-cn.com/graphql/",
-      //     {
-      //       operationName: "userContest",
-      //       variables: { userSlug: "lucien_z" },
-      //       query:
-      //         "query userContest($userSlug: String!) {\n  userContestRanking(userSlug: $userSlug) {\n    currentRatingRanking\n    __typename\n  }\n}\n",
-      //     },
-      //     {
-      //       headers: {
-      //         authority: "leetcode-cn.com",
-      //         accept: "*/*",
-      //         "content-type": "application/json",
-      //         // origin: "https://leetcode.com",
-      //         // "sec-fetch-site": "same-origin",
-      //         // "sec-fetch-mode": "cors",
-      //         // "sec-fetch-dest": "empty",
-      //         // referer: "https://leetcode.com/lucienzhang/",
-      //         "accept-language": "en-US,en;q=0.9,zh-CN;q=0.8,zh;q=0.7",
-      //       },
-      //     }
-      //   )
-      .then((res) => {
-        this.CNranking = res.data.data.userContestRanking.currentRatingRanking;
-      })
-      .catch((res) => {
-        console.log(res);
-      });
+//     axiosCorsProxy
+//       .post("",
+//         {
+//           operationName: "userContest",
+//           variables: { username: "lucien_z" },
+//           query: `
+// query userContest($userSlug: String!) {
+//   userContestRanking(userSlug: $userSlug) {
+//     currentRatingRanking
+//     __typename
+//   }
+// }
+// `,
+//         },
+//         { params: { url: "https://leetcode-cn.com/graphql" } })
+//       // axios
+//       //   .post(
+//       //     "https://cors-anywhere.herokuapp.com/https://leetcode-cn.com/graphql/",
+//       //     {
+//       //       operationName: "userContest",
+//       //       variables: { userSlug: "lucien_z" },
+//       //       query:
+//       //         "query userContest($userSlug: String!) {\n  userContestRanking(userSlug: $userSlug) {\n    currentRatingRanking\n    __typename\n  }\n}\n",
+//       //     },
+//       //     {
+//       //       headers: {
+//       //         authority: "leetcode-cn.com",
+//       //         accept: "*/*",
+//       //         "content-type": "application/json",
+//       //         // origin: "https://leetcode.com",
+//       //         // "sec-fetch-site": "same-origin",
+//       //         // "sec-fetch-mode": "cors",
+//       //         // "sec-fetch-dest": "empty",
+//       //         // referer: "https://leetcode.com/lucienzhang/",
+//       //         "accept-language": "en-US,en;q=0.9,zh-CN;q=0.8,zh;q=0.7",
+//       //       },
+//       //     }
+//       //   )
+//       .then((res) => {
+//         this.CNranking = res.data.data.userContestRanking.currentRatingRanking;
+//       })
+//       .catch((res) => {
+//         console.log(res);
+//       });
   },
 };
 </script>
