@@ -4,16 +4,16 @@
     <div class="container-fluid">
       <div class="row text-center">
         <div class="col-2 col-btn">
-          <button class="btn btn-info float-left" @click="clear">{{clearBtnName}}</button>
+          <button class="btn btn-info float-left" @click="clear">{{ clearBtnName }}</button>
         </div>
         <div class="col-8">
-          <div v-if="result!==''">
-            <p>{{resultTag}}: {{result}}</p>
-            <p>{{probTag}}: {{prob}}</p>
+          <div v-if="result !== ''">
+            <p>{{ resultTag }}: {{ result }}</p>
+            <p>{{ probTag }}: {{ prob }}</p>
           </div>
         </div>
         <div class="col-2 col-btn">
-          <button class="btn btn-success float-right" @click="recognize">{{recognizeBtnName}}</button>
+          <button class="btn btn-success float-right" @click="recognize">{{ recognizeBtnName }}</button>
         </div>
       </div>
     </div>
@@ -22,7 +22,9 @@
 
 <script>
 import SignaturePad from "signature_pad";
-import mlApi from "../axios-ml";
+import { axiosMl } from "../axios-instances";
+import { message } from "ant-design-vue";
+import "ant-design-vue/lib/message/style/css";
 
 export default {
   props: {
@@ -67,9 +69,9 @@ export default {
     },
     recognize() {
       if (this.mnistPad.isEmpty()) {
-        this.$message.warning(this.warningMsg);
+        message.warning(this.warningMsg);
       } else {
-        this.getMNISTGridBySize(process.env.VUE_APP_DEBUG, 28, this.img2text);
+        this.getMNISTGridBySize(__APP_DEBUG__, 28, this.img2text);
       }
     },
     getArea() {
@@ -148,7 +150,7 @@ export default {
 
       let img = new Image();
 
-      img.onload = function() {
+      img.onload = function () {
         ctx.fillStyle = "white";
         ctx.fillRect(0, 0, grid.w, grid.h);
 
@@ -169,7 +171,7 @@ export default {
 
         if (isDev) {
           document.body.append(canvas);
-          setTimeout(function() {
+          setTimeout(function () {
             canvas.remove();
           }, 2000);
         }
@@ -181,11 +183,11 @@ export default {
       let formData = new FormData();
       let blob = this.dataURItoBlob(b64img);
       formData.append("img", blob);
-      mlApi
+      axiosMl
         .post("/mnist", formData)
         .then(res => {
           if (res.status != 200) {
-            this.$message.error("未知错误");
+            message.error("未知错误");
             console.log(res);
           } else {
             this.result = res.data.result;
@@ -193,7 +195,7 @@ export default {
           }
         })
         .catch(res => {
-          this.$message.error("未知错误");
+          message.error("未知错误");
           console.log(res);
         });
     },
@@ -238,12 +240,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "~bootstrap/scss/functions";
-@import "~bootstrap/scss/variables";
-@import "~bootstrap/scss/mixins";
-@import "~bootstrap/scss/grid";
-@import "~bootstrap/scss/buttons";
-@import "~bootstrap/scss/utilities";
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/mixins";
+@import "bootstrap/scss/grid";
+@import "bootstrap/scss/buttons";
+@import "bootstrap/scss/utilities";
 
 .mnist {
   #mnist-canvas {
@@ -253,12 +255,15 @@ export default {
     max-height: 100%;
     border: 1px solid #d3d3d3;
   }
+
   .row {
     height: 55px;
   }
+
   p {
     margin: 0;
   }
+
   .col-btn {
     padding: 0;
   }
