@@ -1,4 +1,7 @@
 !function() {
+  if (window.d3) {
+    return;
+  }
   var d3 = {
     version: "3.5.17"
   };
