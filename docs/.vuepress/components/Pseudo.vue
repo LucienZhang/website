@@ -5,7 +5,22 @@
 </template>
 
 <script>
-import pseudocode from "pseudocode";
+if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$']],
+      displayMath: [['$$', '$$']],
+      processEscapes: true,
+      processEnvironments: true,
+    },
+    chtml: {
+      fontURL: new URL("./assets/fonts", import.meta.url).href
+    }
+  };
+}
+await import("https://cdn.jsdelivr.net/npm/mathjax@3.0.0/es5/tex-chtml.js");
+await import("./assets/js/pseudocode");
+import("./assets/css/pseudocode.min.css");
 
 export default {
   mounted() {
@@ -16,7 +31,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss" scoped>
-@import "~pseudocode/build/pseudocode.min.css";
-</style>
