@@ -11,7 +11,7 @@ const axiosMl = axios.create({
   baseURL: baseApiUrl + "/v1/ml",
 });
 
-axiosMl.defaults.headers.post["Content-Type"] = "multipart/form-data";
+axiosMl.defaults.headers.post["Content-Type"] = "application/json";
 
 const axiosCorsProxy = axios.create({
   baseURL: baseApiUrl + "/v1/cors-proxy",

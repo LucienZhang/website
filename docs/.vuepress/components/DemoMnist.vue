@@ -180,11 +180,9 @@ export default {
       img.src = this.mnistPad.toDataURL();
     },
     img2text(b64img) {
-      let formData = new FormData();
-      let blob = this.dataURItoBlob(b64img);
-      formData.append("img", blob);
+      b64img = b64img.split(",")[1]
       axiosMl
-        .post("/mnist", formData)
+        .post("/mnist", { "img": b64img })
         .then(res => {
           if (res.status != 200) {
             message.error("未知错误");
@@ -198,23 +196,6 @@ export default {
           message.error("未知错误");
           console.log(res);
         });
-    },
-    dataURItoBlob(dataURI) {
-      let byteString;
-      if (dataURI.split(",")[0].indexOf("base64") >= 0)
-        byteString = atob(dataURI.split(",")[1]);
-      else byteString = unescape(dataURI.split(",")[1]);
-
-      let mimeString = dataURI
-        .split(",")[0]
-        .split(":")[1]
-        .split(";")[0];
-
-      let ia = new Uint8Array(byteString.length);
-      for (let i = 0; i < byteString.length; i++) {
-        ia[i] = byteString.charCodeAt(i);
-      }
-      return new Blob([ia], { type: mimeString });
     }
   },
   mounted() {
