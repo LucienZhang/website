@@ -50,7 +50,13 @@ export default defineUserConfig({
         }),
       ],
       ssr: {
-        noExternal: ["web-ifc-three", "ant-design-vue"],
+        noExternal: [
+          "web-ifc-three",
+          "ant-design-vue",
+          "@ant-design/icons-vue",
+          "@ant-design/icons-svg",
+          "highcharts-vue",
+        ],
       },
     },
   }),
