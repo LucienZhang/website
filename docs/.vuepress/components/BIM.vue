@@ -97,8 +97,8 @@ export default {
     });
 
     const ifcLoader = new IFCLoader();
-    ifcLoader.ifcManager.setWasmPath("../../IFCwasm/"); //app.js in under /assets/js/, so ../../ is the root path
-    ifcLoader.load("/bim/" + this.filePath, (ifcModel) => scene.add(ifcModel));
+    ifcLoader.ifcManager.setWasmPath("../../static/IFCwasm/"); //app.js in under /assets/js/, so ../../ is the root path
+    ifcLoader.load("/static/bim/" + this.filePath, (ifcModel) => scene.add(ifcModel));
   }
 };
 </script>
