@@ -16,8 +16,6 @@
 <script>
 import { useSiteLocaleData } from '@vuepress/client';
 import { axiosCorsProxy } from '../axios-instances';
-await import("./assets/js/d3");
-await import("./assets/js/nv.d3");
 
 export default {
   props: {
@@ -41,7 +39,9 @@ export default {
       CNranking: null,
     };
   },
-  beforeMount() {
+  async beforeMount() {
+    await import("./assets/js/d3");
+    await import("./assets/js/nv.d3");
     // ranking details from global site
     axiosCorsProxy
       .post("", { url: "https://leetcode.com/lucienzhang/", method: "GET" })
