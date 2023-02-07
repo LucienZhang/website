@@ -222,7 +222,8 @@ export default {
       qrcode: false,
       isPreload: true,
       largeScreen: false,
-      bp: false
+      bp: false,
+      isTouchDevice: false
     };
   },
   computed: {
@@ -234,11 +235,6 @@ export default {
     },
     rootPath() {
       return this.isEnglishSite ? "/" : "/zh/";
-    },
-    isTouchDevice() {
-      return (('ontouchstart' in window) ||
-        (navigator.maxTouchPoints > 0) ||
-        (navigator.msMaxTouchPoints > 0));
     }
   },
   methods: {
@@ -265,6 +261,10 @@ export default {
     }
   },
   mounted() {
+    this.isTouchDevice = (('ontouchstart' in window) ||
+      (navigator.maxTouchPoints > 0) ||
+      (navigator.msMaxTouchPoints > 0));
+
     let that = this;
 
     that.restartTyped();

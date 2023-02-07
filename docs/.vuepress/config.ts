@@ -49,6 +49,9 @@ export default defineUserConfig({
           resolvers: [AntDesignVueResolver()],
         }),
       ],
+      ssr: {
+        noExternal: ["web-ifc-three", "ant-design-vue"],
+      },
     },
   }),
 
