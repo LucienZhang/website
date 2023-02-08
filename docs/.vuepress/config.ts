@@ -49,6 +49,15 @@ export default defineUserConfig({
           resolvers: [AntDesignVueResolver()],
         }),
       ],
+      ssr: {
+        noExternal: [
+          "web-ifc-three",
+          "ant-design-vue",
+          "@ant-design/icons-vue",
+          "@ant-design/icons-svg",
+          "highcharts-vue",
+        ],
+      },
     },
   }),
 

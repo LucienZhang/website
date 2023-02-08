@@ -1,20 +1,13 @@
 <template>
   <div class="jupyter-content">
     <p>
-      <a
-        :href="'https://mybinder.org/v2/gh/LucienZhang/website-binder/master?filepath=notebooks/'+filePath"
-        target="_blank"
-      >
+      <a :href="'https://mybinder.org/v2/gh/LucienZhang/website-binder/master?filepath=notebooks/' + filePath"
+        target="_blank">
         <img src="https://mybinder.org/badge_logo.svg" alt="Binder" />
       </a>
     </p>
     <a-spin size="large" tip="Loading..." :spinning="spinning">
-      <iframe
-        frameborder="no"
-        scrolling="no"
-        :src="'/nbviewer/localfile/'+filePath"
-        @load="resizeIframe"
-      ></iframe>
+      <iframe frameborder="no" scrolling="no" :src="'/static/jupyter/nb/' + filePath" @load="resizeIframe"></iframe>
     </a-spin>
   </div>
 </template>

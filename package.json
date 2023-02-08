@@ -8,7 +8,8 @@
   },
   "scripts": {
     "dev": "vuepress dev docs",
-    "build": "vuepress build docs"
+    "build": "vuepress build docs",
+    "postinstall": "patch-package"
   },
   "repository": {
     "type": "git",
@@ -34,7 +35,8 @@
     "highcharts-vue": "^1.4.0",
     "markdown-it-footnote": "^3.0.3",
     "markdown-it-multimd-table": "^4.2.0",
-    "markdown-it-pangu": "^1.0.2",
+    "markdown-it-pangu": "^1.0.0",
+    "patch-package": "^6.5.1",
     "signature_pad": "^4.1.4",
     "three": "^0.135.0",
     "typed.js": "^2.0.12",
